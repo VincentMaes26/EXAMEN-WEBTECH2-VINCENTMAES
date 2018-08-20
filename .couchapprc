@@ -1,0 +1,10 @@
+{
+    "env" : {
+        "public" : {
+          "db" : "http://vincent:p123@mycouch.couchone.com/pokemon2"
+        },
+        "default" : {
+          "db" : "http://vincent:p123@localhost:5984/pokemon2"
+        }
+      }
+}
