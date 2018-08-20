@@ -13,19 +13,33 @@ angular.module('pokemonApp', ['ngRoute'])
 
     .controller('homeCtrl', function($scope, pokemonSrv, saveSrv){
         $(function(){
-            var pokemonList = pokemonSrv.getPokemon();
-            for(var i = 0; i < pokemonList.length; i++){
-                saveSrv.setPokemon(pokemonList[i].name, pokemonList[i]);
-            };
+            pokemonSrv.getPokemon().then(function(data){
+                for(var i = 0; i < data.length; i++){
+                    if(pokemonSrv.getPokemon(data[i])== null)
+                    saveSrv.setPokemon(data[i].name, data[i]);
+                };
+            },function(err){
+              alert('Pokemon not found');  
+            });
             
-        });
-
-        $('#searchButton').on('click', function(e){
-            var date1 = Date.parse($('#date1').val());
-            var date2 = Date.parse($('#date2').val());
             
-        })
-
+            $("#searchButton").on("click", function(){
+                var date1 = Date.parse($('#date1').val());
+                var date2 = Date.parse($('#date2').val());
+                var pokemonList = [];
+                pokemonSrv.getPokemon().then(function(data){
+                    for(var i = 0; i<data.length; i++){
+                        if(Date.parse(data[i].owned) >= date1 && Date.parse(data[i].owned)<=date2){
+                            pokemonList.push(data[i]);
+                        };
+                    };
+                    $scope.pokemon = pokemonList;
+                }, function(err){
+                    alert('Not found');
+                });
+                
+            });
+        });  
     })
 
     .service('pokemonSrv', function($http, $q){
@@ -35,9 +49,11 @@ angular.module('pokemonApp', ['ngRoute'])
 
             $http.get(url)
                 .then(function(data){
-                    var pokemon = data.data[0].docs;
+                     var pokemon = data.data.docs;
+                    //console.log(pokemon);
+                    //console.log(typeof pokemon);
                     var pokemonList = [];
-                    for(var i; i < pokemon.length; i++){
+                    for(var i=0; i < pokemon.length; i++){
                         pokemonList.push(pokemon[i]);
                     }
                     q.resolve(pokemonList);
@@ -50,7 +66,7 @@ angular.module('pokemonApp', ['ngRoute'])
     })
 
     .service('saveSrv', function($http, $q){
-        this.getPokemon = function(name){
+        this.getPokemon = function(key){
             var q = $q.defer();
             $http.get('../../' + key)
                 .then(function(data){
@@ -61,7 +77,18 @@ angular.module('pokemonApp', ['ngRoute'])
             return q.promise;
         };
 
+        this.getAllPokemon = function(){
+            var q = $q.defer();
+            $http.get('../../_all_docs')
+            .then(function(data){
+                q.resolve(data);
+            }, function(err){
+                q.reject(err);
+            });
+            return q.promise;
+        };
+
         this.setPokemon = function(key, value){
-            $http.put('../../0' + key, value);
-        }
+            $http.put('../../' + key, value);
+        };
     })

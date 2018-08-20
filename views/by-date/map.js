@@ -1,3 +1,3 @@
 function(doc) {
-    emit(doc.date, doc)
+    emit(doc.owned, doc)
   };

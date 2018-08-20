@@ -1,5 +1,5 @@
 <div class='jumbotron'>
-  <h1 class="display-3">MovieApp</h1>
+  <h1 class="display-3">Pokemon App</h1>
   <p class='lead'>
   	<label for='date1'>Date 1 :</label>
   	<input type='text' class='form-control' id='date1'>
@@ -7,9 +7,9 @@
     <label for='date2'>Date 2 :</label>
   	<input type='text' class='form-control' id='date2'>
   	<br/>
-    <a class='btn btn-primary btn-lg' role='button' id='searchButton'>Zoek pokemon</a>
+    <button type="button" class="btn btn-primary" id="searchButton">Zoek pokemon</button>
     <br/>
     <br/>
-    <b>Pokemon : {{ pokemon.name }}</b>
+    <b>Pokemon : <div ng-repeat="p in pokemon"> {{ p.name }} </div></b>
   </p>
 </div>
