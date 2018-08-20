@@ -13,15 +13,25 @@ angular.module('pokemonApp', ['ngRoute'])
 
     .controller('homeCtrl', function($scope, pokemonSrv, saveSrv){
         $(function(){
-            for(var i = 0; i<)
-            saveSrv.getPokemon
+            var pokemonList = pokemonSrv.getPokemon();
+            for(var i = 0; i < pokemonList.length; i++){
+                saveSrv.setPokemon(pokemonList[i].name, pokemonList[i]);
+            };
+            
+        });
+
+        $('#searchButton').on('click', function(e){
+            var date1 = Date.parse($('#date1').val());
+            var date2 = Date.parse($('#date2').val());
+            
         })
+
     })
 
     .service('pokemonSrv', function($http, $q){
-        this.getPokemon = function(id){
+        this.getPokemon = function(){
             var q = $q.defer();
-            var url = 'http://localhost:5984/_utils/index.html#database/pokemon/87794933bbcea92d7f500c1f03006642';
+            var url = 'http://localhost:5984/pokemon/87794933bbcea92d7f500c1f03006642';
 
             $http.get(url)
                 .then(function(data){
